@@ -1,0 +1,13 @@
+{
+  "name": "agent-practices",
+  "description": "Reusable, project-agnostic engineering-practice skills for coding agents.",
+  "owner": { "name": "constatza" },
+  "plugins": [
+    {
+      "name": "python-practices",
+      "source": "./plugins/python-practices",
+      "description": "Python-specific engineering conventions: tooling, typing, testing, docstrings.",
+      "category": "workflow"
+    }
+  ]
+}

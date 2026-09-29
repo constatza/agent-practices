@@ -1,0 +1,16 @@
+{
+  "name": "python-practices",
+  "version": "1.0.0",
+  "description": "Python-specific engineering conventions: tooling, typing, testing, docstrings.",
+  "author": { "name": "constatza" },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Python Practices",
+    "shortDescription": "Python tooling, typing, testing, and docstring conventions.",
+    "longDescription": "The Python-language expression of the generic engineering practices in this repo's AGENTS.md: uv/ruff/ty tooling, PEP 695 generics, Pydantic, pytest fixtures and tmp_path, Google-style docstrings.",
+    "developerName": "constatza",
+    "category": "Productivity",
+    "capabilities": [],
+    "defaultPrompt": "Use the python-practices skill when writing, reviewing, or refactoring Python code."
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "name": "python-practices",
+  "version": "1.0.0",
+  "description": "Python-specific engineering conventions: tooling, typing, testing, docstrings.",
+  "author": { "name": "constatza" }
+}

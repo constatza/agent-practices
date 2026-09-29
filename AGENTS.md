@@ -22,6 +22,11 @@
   up empty. Applies at every scale, from a single function to a whole
   subsystem.
 - Don't Repeat Yourself (DRY): no duplicated logic across call sites.
+- No magic values: a literal with meaning (a threshold, a limit, a status
+  code, a path segment, a retry count) gets a named constant, not a bare
+  number or string repeated at its call sites. Never hardcode a value that
+  legitimately varies by environment, deployment, or caller — thread it
+  through config or a parameter instead.
 - SOLID, expressed through the language's native constructs (traits/protocols,
   closed enums, free functions) — not mechanical Java/C++-style class
   hierarchies or an interface for every single implementation:

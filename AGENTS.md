@@ -15,12 +15,12 @@
   build abstractions, configuration, or flexibility for a need that doesn't
   exist yet. The simplest design that satisfies the current, real requirement
   is the right one until a second real use case actually appears.
-- Never reinvent the wheel: before writing custom code for any non-trivial
-  piece of functionality, search first — does the standard library already
-  solve it, then an already-adopted dependency, then a well-maintained
-  third-party library/package. Only write custom code once that search comes
-  up empty. Applies at every scale, from a single function to a whole
-  subsystem.
+- Before writing custom code for non-trivial functionality, check the standard
+  library, adopted dependencies, and well-maintained third-party packages.
+  Evaluate maintenance, licensing, security, compile/runtime cost, and
+  transitive complexity; a small local implementation is preferable when a
+  dependency's cost exceeds its value. Applies at every scale, from a single
+  function to a whole subsystem.
 - Don't Repeat Yourself (DRY): no duplicated logic across call sites.
 - No magic values: a literal with meaning (a threshold, a limit, a status
   code, a path segment, a retry count) gets a named constant, not a bare
@@ -56,8 +56,9 @@
   outer layer.
 
 ## Testing
-- Test data comes from reusable, composable fixtures — never construct it
-  inline inside a test function.
+- Use reusable, composable fixtures for shared, complex, or expensive setup.
+  Keep simple one-use test values inline and fixtures at the narrowest useful
+  scope.
 - Use the test framework's own isolated temp-path mechanism — never hand-roll
   temp file/directory logic.
 - Tests run in strict isolation: no dependency on repo configs, external
@@ -83,8 +84,9 @@
   a single unbulleted paragraph.
 
 ## Plans
-- Always update `docs/plan.md` in the current project's repository root when
-  making plans. Never write project plans outside the project.
+- Follow the current project's planning convention. Create or update a plan
+  document only when the project or user requires one, and never write project
+  plans outside the project.
 
 ## Working with Files
 - Never read raw PDF bytes/streams directly (e.g. piping a PDF through a web

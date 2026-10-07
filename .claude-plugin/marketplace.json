@@ -6,7 +6,7 @@
     {
       "name": "python-practices",
       "source": "./plugins/python-practices",
-      "description": "Python-specific engineering conventions: tooling, typing, testing, docstrings.",
+      "description": "Python engineering conventions for tooling, type-driven domain modeling, validation, testing, and documentation.",
       "category": "workflow"
     }
   ]

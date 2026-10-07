@@ -7,9 +7,11 @@ Codex, and anything else that reads `AGENTS.md`).
   testing hygiene, documentation, commit conventions. Claude Code (2.1.277+)
   reads this natively when a project has no `CLAUDE.md`; other agents that
   follow the [AGENTS.md convention](https://agents.md) read it directly too.
-  Copy or symlink it into a project (or a user-level config directory) as-is.
+  Use it as a project starting point where appropriate; do not maintain it as
+  a second user-level copy of the canonical shared instructions.
 - **`plugins/python-practices`** — the Python-specific expression of those
-  principles (tooling, typing, testing, docstrings), packaged as an
+  principles (tooling, typing, domain modeling, validation, testing, and
+  documentation), packaged as an
   installable skill for both Claude Code and Codex.
 
 ## Why no `rust-practices` plugin here
@@ -46,9 +48,10 @@ codex plugin marketplace add constatza/agent-practices
 codex plugin add python-practices@agent-practices
 ```
 
-Then copy or symlink `AGENTS.md` into a project (or your user-level Claude
-Code `CLAUDE.md` — the global file has no `AGENTS.md` fallback, so paste the
-content there directly).
+For a shared user-level configuration, keep the canonical instructions in
+`$HOME/.claude/CLAUDE.md` and point `$HOME/.codex/AGENTS.md` to it with a
+relative symlink (`../.claude/CLAUDE.md`). Project files may override those
+defaults with project-specific rules.
 
 ## Maintaining
 

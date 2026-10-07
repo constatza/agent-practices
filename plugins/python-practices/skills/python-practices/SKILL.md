@@ -1,47 +1,51 @@
 ---
 name: python-practices
-description: Python-specific engineering conventions — tooling, typing, testing, docstrings. Use when writing, reviewing, or refactoring Python code.
+description: Python engineering conventions for tooling, typing, type-driven domain modeling, validation, testing, and docstrings. Use when writing, reviewing, or refactoring Python code.
 ---
 
 # Python Practices
 
-The Python-language expression of the generic engineering practices in this
-repo's `AGENTS.md`. Read that first — this skill only covers what's specific to
-Python; it doesn't restate the language-agnostic principles (SOLID, YAGNI,
-testing isolation, commit format, etc.).
+Apply these Python-specific rules alongside the active language-agnostic and project instructions. Project requirements take precedence when they select a different supported Python version or toolchain.
 
 ## Tooling
-- Launch all Python entry points through `uv run ...` for consistent,
-  reproducible tooling.
-- Use `ruff` for linting and autofix.
-- Use `ty` for type checking — never `pyright`.
-- Prefer `ast-grep` over plain-text grep when searching Python code.
+
+- Run Python entry points through `uv run ...` for reproducible tooling.
+- Use `ruff` for linting and safe autofixes.
+- Run the project's configured static type checker in CI with strict settings where supported. `ty`, Pyright, mypy, and other maintained checkers are all valid choices; select based on the project, and do not rule out `ty` by default.
 
 ## Typing
-- Use PEP 695 generic syntax (`class Foo[T]:`, `def foo[T]():`) — never
-  legacy `TypeVar`/`Generic[T]`.
-- Use Pydantic models for structured/validated data and config, not raw dicts.
-  This is the Python expression of the global Type Safety principle: make
-  illegal states unrepresentable via Pydantic validators/`Literal`/enums, not
-  just annotations that nothing enforces at runtime.
 
-## Error Handling
-- Raise exceptions directly — no error/result-wrapper objects for error
-  transport. Exceptions propagate; callers catch what they can handle.
+- Use PEP 695 generic syntax (`class Foo[T]:`, `def foo[T]():`) when the supported Python version permits it; use legacy `TypeVar`/`Generic[T]` only when compatibility requires it.
+- Minimize `Any`, broad `cast(...)`, and `# type: ignore`. Each escape hatch requires a concrete justification and the narrowest possible scope.
+- Do not imitate Rust ownership semantics mechanically; use Python's native object and resource-management model.
+
+## Type-Driven Domain Modeling
+
+When creating or changing domain states, lifecycle APIs, validated values, result models, or boundary schemas, read [references/type-driven-domain-modeling.md](references/type-driven-domain-modeling.md).
+
+Use these defaults:
+
+- Represent mutually exclusive states with `A | B` unions instead of flags coupled to `None`.
+- Model states with different data or operations as separate `@dataclass(frozen=True, slots=True)` classes when appropriate. Remember that `frozen=True` prevents attribute rebinding but does not make mutable field values deeply immutable.
+- Use `NewType` for zero-cost semantic distinctions that need no runtime validation.
+- Use immutable value objects when validation or behavior belongs to the value.
+- Use `StrEnum` for closed symbolic values, but not as a substitute for state-specific types carrying different data.
+- Handle closed unions with `match` and `typing.assert_never` when exhaustive checking matters.
+- Use the project's existing validation mechanism at external boundaries. When complex structured input needs schema validation and the project uses or can justify Pydantic, prefer Pydantic v2, enable strict validation where coercion would hide invalid input, and convert boundary models into domain types rather than making them the domain by default.
+- Keep `dict[str, Any]` and other weak representations out of core domain logic.
+
+## Error Handling and Outcomes
+
+- Raise exceptions for error transport. Let exceptions propagate until a caller can handle them meaningfully.
+- Use explicit success/failure unions when success and failure are domain outcomes represented as data; do not introduce result wrappers merely to transport Python errors.
 
 ## Testing
-- pytest fixtures in `conftest.py` — modular and composable, never inline test
-  data (the Python expression of the global fixtures-only testing rule).
-- Use pytest's `tmp_path` fixture directly (it's a ready-to-use
-  `pathlib.Path`) — never the `tempfile` package.
-- Use `.as_posix()` when comparing paths in tests, for cross-platform
-  stability.
+
+- Use modular, composable pytest fixtures for shared, complex, or expensive setup. Keep simple one-use values inline, define fixtures at the narrowest useful scope, and place them in `conftest.py` only when they are shared across test modules.
+- Use pytest's `tmp_path` fixture directly; do not use `tempfile`.
+- Compare paths with `.as_posix()` when tests require a platform-independent textual path.
 
 ## Documentation
-- Google-style docstrings, with type information included in the docstring's
-  parameter/return descriptions in addition to signature type hints.
-  **Note:** this duplicates information the type checker already enforces
-  from the signature, and can drift out of sync with it — some Google-style
-  Python codebases now omit repeating types in the `Args:` block for exactly
-  that reason. Kept here as the current convention; reconsider if drift
-  becomes a recurring problem.
+
+- Use Google-style docstrings.
+- Describe semantics, constraints, errors, and non-obvious behavior without repeating types already expressed by annotations. Include type details only when annotations cannot express a relevant constraint.
